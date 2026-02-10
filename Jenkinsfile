@@ -83,22 +83,20 @@ pipeline {
         stage('Deploy to ECS') {
             steps {
                 script {
-                    // Force new deployment for backend
+                    // Update backend task definition
                     sh '''
-                        aws ecs update-service \
-                            --cluster ${ECS_CLUSTER} \
-                            --service ${ECS_BACKEND_SERVICE} \
-                            --force-new-deployment \
-                            --region ${AWS_REGION}
+                        TASK_DEF=$(aws ecs describe-task-definition --task-definition devops-challenge-dev-backend --region ${AWS_REGION})
+                        NEW_TASK_DEF=$(echo $TASK_DEF | jq --arg IMAGE "${ECR_BACKEND_REPO}:${IMAGE_TAG}" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+                        aws ecs register-task-definition --cli-input-json "$NEW_TASK_DEF" --region ${AWS_REGION}
+                        aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_BACKEND_SERVICE} --task-definition devops-challenge-dev-backend --region ${AWS_REGION}
                     '''
                     
-                    // Force new deployment for frontend
+                    // Update frontend task definition
                     sh '''
-                        aws ecs update-service \
-                            --cluster ${ECS_CLUSTER} \
-                            --service ${ECS_FRONTEND_SERVICE} \
-                            --force-new-deployment \
-                            --region ${AWS_REGION}
+                        TASK_DEF=$(aws ecs describe-task-definition --task-definition devops-challenge-dev-frontend --region ${AWS_REGION})
+                        NEW_TASK_DEF=$(echo $TASK_DEF | jq --arg IMAGE "${ECR_FRONTEND_REPO}:${IMAGE_TAG}" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+                        aws ecs register-task-definition --cli-input-json "$NEW_TASK_DEF" --region ${AWS_REGION}
+                        aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_FRONTEND_SERVICE} --task-definition devops-challenge-dev-frontend --region ${AWS_REGION}
                     '''
                 }
             }

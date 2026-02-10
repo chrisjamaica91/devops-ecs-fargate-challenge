@@ -115,7 +115,8 @@ resource "aws_iam_role_policy" "jenkins_ecs_policy" {
           "ecs:DescribeTaskDefinition",
           "ecs:RegisterTaskDefinition",
           "ecs:ListTaskDefinitions",
-          "ecs:DescribeClusters"
+          "ecs:DescribeClusters",
+          "ecs:ListServices"
         ]
         Resource = "*"
       },
