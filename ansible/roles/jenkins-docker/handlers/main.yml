@@ -1,0 +1,10 @@
+---
+- name: rebuild jenkins image
+  command: docker build --no-cache -t jenkins-with-docker:latest /opt/jenkins
+  args:
+    chdir: /opt/jenkins
+  listen: rebuild jenkins image
+
+- name: restart jenkins
+  command: docker restart jenkins
+  listen: restart jenkins

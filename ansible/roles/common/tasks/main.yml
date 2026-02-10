@@ -1,0 +1,29 @@
+---
+# Bootstrap Python using raw module (no Python required)
+- name: Bootstrap Python for Ansible
+  raw: |
+    if ! command -v python3 &> /dev/null; then
+      dnf install -y python3
+    fi
+  changed_when: false
+  tags: bootstrap
+
+- name: Gather facts after Python installation
+  setup:
+  tags: bootstrap
+
+- name: Update all packages
+  dnf:
+    name: "*"
+    state: latest
+  tags: system
+
+- name: Install common utilities
+  dnf:
+    name:
+      - git
+      - wget
+      - unzip
+      - tar
+    state: present
+  tags: system

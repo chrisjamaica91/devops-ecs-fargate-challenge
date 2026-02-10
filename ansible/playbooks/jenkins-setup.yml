@@ -1,0 +1,26 @@
+---
+- name: Setup Jenkins on EC2
+  hosts: jenkins
+  gather_facts: no
+  become: yes
+
+  roles:
+    - role: ../roles/common
+      tags: common
+    
+    - role: ../roles/docker
+      tags: docker
+    
+    - role: ../roles/jenkins-docker
+      tags: jenkins
+
+  post_tasks:
+    - name: Display Jenkins access information
+      debug:
+        msg:
+          - "================================================"
+          - "Jenkins is now running!"
+          - "Access URL: http://{{ ansible_host }}:8080"
+          - "Initial admin password displayed above"
+          - "================================================"
+      tags: always
