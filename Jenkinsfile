@@ -7,8 +7,8 @@ pipeline {
         ECR_BACKEND_REPO = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/devops-challenge/backend"
         ECR_FRONTEND_REPO = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/devops-challenge/frontend"
         ECS_CLUSTER = 'devops-challenge-dev-cluster'
-        ECS_BACKEND_SERVICE = 'devops-challenge-backend-service'
-        ECS_FRONTEND_SERVICE = 'devops-challenge-frontend-service'
+        ECS_BACKEND_SERVICE = 'devops-challenge-dev-backend-service'
+        ECS_FRONTEND_SERVICE = 'devops-challenge-dev-frontend-service'
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
     
