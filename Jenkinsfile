@@ -42,12 +42,12 @@ pipeline {
             parallel {
                 stage('Scan Backend') {
                     steps {
-                        sh 'trivy image --severity HIGH,CRITICAL --exit-code 0 backend:${IMAGE_TAG}'
+                        sh 'trivy image --no-progress --cache-dir /tmp/trivy-cache-backend --severity HIGH,CRITICAL --exit-code 0 backend:${IMAGE_TAG}'
                     }
                 }
                 stage('Scan Frontend') {
                     steps {
-                        sh 'trivy image --severity HIGH,CRITICAL --exit-code 0 frontend:${IMAGE_TAG}'
+                        sh 'trivy image --no-progress --cache-dir /tmp/trivy-cache-frontend --severity HIGH,CRITICAL --exit-code 0 frontend:${IMAGE_TAG}'
                     }
                 }
             }
